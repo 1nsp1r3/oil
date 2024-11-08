@@ -1,0 +1,7 @@
+# Specific for react apps
+node_modules/
+.gradle/
+.cxx/
+build/
+
+# Perso

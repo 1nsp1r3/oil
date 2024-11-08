@@ -1,0 +1,50 @@
+name: Build APK
+
+on:
+  push:
+    tags:
+    - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Need by ncipollo/release-action@v1 to avoid "Error 403: Resource not accessible by integration"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup variables
+        run: |
+             echo "version=$(echo ${GITHUB_REF#refs/tags/})" >> $GITHUB_ENV
+             echo "repositoryName=$(echo '${{ github.repository }}' | awk -F '/' '{print $2}')" >> $GITHUB_ENV
+
+      - name: Setup JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: zulu # See 'Supported distributions' for available options
+          java-version: 17
+          cache: gradle
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Run npm install
+        run: npm install
+
+      - name: Build release
+        run: |
+             cd android/
+             chmod +x ./gradlew
+             ./gradlew assembleRelease
+
+      - name: Rename release
+        run: mv ./android/app/build/outputs/apk/release/app-release.apk ./android/app/build/outputs/apk/release/${{env.repositoryName}}-${{env.version}}.apk
+
+      - name: Publish release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "android/app/build/outputs/apk/release/${{env.repositoryName}}-${{env.version}}.apk"
