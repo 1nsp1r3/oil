@@ -4,7 +4,6 @@
 # TODO
 - La location est pas nécessaire pour ble ?
 - Déplacer les sources au meme endroit et en .js
-- Faire un build
 
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 

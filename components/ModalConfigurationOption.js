@@ -2,7 +2,7 @@ import {View, StyleSheet, Text, TextInput} from "react-native"
 import FontAwesome                         from "@react-native-vector-icons/fontawesome5"
 import global                              from "../global"
 
-export default ({icon, text, placeholder, onChangeText, value})=>{
+export default ({keyboardType, icon, text, placeholder, onChangeText, value})=>{
   return (
     <View style={s.container}>
       <View style={s.colLabel}>
@@ -12,7 +12,7 @@ export default ({icon, text, placeholder, onChangeText, value})=>{
         </View>
       </View>
       <View style={s.colInput}>
-        <TextInput keyboardType="numeric" style={s.textInput} placeholder="{placeholder}" onChangeText={onChangeText} value={value} />
+        <TextInput keyboardType={keyboardType} style={s.textInput} placeholder={placeholder} onChangeText={onChangeText} value={value} />
       </View>
     </View>
   )
@@ -23,11 +23,11 @@ const s = StyleSheet.create({
     flexDirection: "row",
   },
   colLabel: {
-    flex: 2,
+    flex: 3,
     justifyContent: "center",
   },
   colInput: {
-    flex: 1,
+    flex: 2,
   },
   labelContainer: {
     flexDirection: "row",

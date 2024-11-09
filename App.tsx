@@ -16,25 +16,55 @@ import permission                             from "./lib/permission"
 export default function Index(){
   const [                 temperature, setTemperature]               = useState(0)
   const [                    pressure, setPressure]                  = useState(0)
-  const [              temperatureMax, setTemperatureMax]            = useState(0)
-  const [                 pressureMin, setPressureMin]               = useState(0)
   const [ isModalConfigurationVisible, setModalConfigurationVisible] = useState(false)
-  const [       isConfigurationLoaded, setConfigurationLoaded]       = useState(false)
   const [         isPermissionProblem, setPermissionProblem]         = useState(false)
   const [                isBleProblem, setBleProblem]                = useState(false)
 
-  if (!isConfigurationLoaded) configuration.load()
-    .then((Options)=>{
-      setTemperatureMax(Options.temperatureMax)
-      setPressureMin(Options.pressureMin)
-      setConfigurationLoaded(true)
+  //Configuration
+  const [temperatureMax, setTemperatureMax] = useState(0)
+  const [   pressureMin, setPressureMin]    = useState(0)
+
+  /**
+   *
+   */
+  const runScan = async (PeripheralId)=>{
+    console.log(`runScan(${PeripheralId})`)
+    const granted = await permission.request([
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+      PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
+      PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT, //Normalement inutile (Absent du AndroidManifest.xml) mais obligatoire quand on passe par PermissionsAndroid.requestMultiple pour activer les permissions
+    ])
+    if (!granted){
+      setPermissionProblem(true)
+      return
+    }
+
+    ble.scan("MX5", PeripheralId, onAdvertising, ()=>{
+      setBleProblem(true)
     })
+  }
+
+  /**
+   *
+   */
+  const loadConfiguration = ()=>{
+    console.log("loadConfiguration()")
+    configuration.load()
+      .then((Options)=>{
+        setTemperatureMax(Options.temperatureMax)
+        setPressureMin(Options.pressureMin)
+
+        //Then start BLE
+        runScan(Options.peripheralId)
+      })
+  }
 
   /**
    *
    */
   const onModalConfigurationClose = function(){
-    setConfigurationLoaded(false) //force reload new configuration
+    loadConfiguration()
     setModalConfigurationVisible(false)
   }
 
@@ -52,31 +82,10 @@ export default function Index(){
   }
 
   /**
-   *
-   */
-  const checkPermissions = async ()=>{
-    console.log("checkPermissions()")
-    const granted = await permission.request([
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-      PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
-      PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
-      PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT, //Normalement inutile (Absent du AndroidManifest.xml) mais obligatoire quand on passe par PermissionsAndroid.requestMultiple pour activer les permissions
-    ])
-    if (!granted){
-      setPermissionProblem(true)
-      return
-    }
-
-    ble.scan("MX5", null, onAdvertising, ()=>{
-      setBleProblem(true)
-    })
-  }
-
-  /**
-   * Run scan only on the first rendering
+   * Load configuration only on the first rendering
    */
   useEffect(()=>{
-    checkPermissions()
+    loadConfiguration()
   }, [])
 
   return(

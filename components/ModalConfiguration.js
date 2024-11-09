@@ -6,6 +6,7 @@ import ModalConfigurationOption                   from "../components/ModalConfi
 import configuration                              from "../app/configuration"
 
 export default ({isVisible, onClose})=>{
+  const [peripheralId, setPeripheralId]     = useState("")
   const [temperatureMax, setTemperatureMax] = useState(0)
   const [pressureMin, setPressureMin]       = useState(0)
 
@@ -15,6 +16,7 @@ export default ({isVisible, onClose})=>{
   const onShow = ()=>{
     configuration.load()
       .then((Options)=>{
+        setPeripheralId(Options.peripheralId)
         setTemperatureMax(Options.temperatureMax)
         setPressureMin(Options.pressureMin)
       })
@@ -25,8 +27,9 @@ export default ({isVisible, onClose})=>{
    */
   const onModalClose = ()=>{
     configuration.save({
+        "peripheralId": peripheralId,
       "temperatureMax": temperatureMax,
-      "pressureMin": pressureMin,
+      "pressureMin"   : pressureMin,
     })
       .then(()=>onClose())
   }
@@ -42,8 +45,9 @@ export default ({isVisible, onClose})=>{
         </View>
 
         {/* CONTENT */}
-        <ModalConfigurationOption icon="thermometer-half" text="Max temperature (°C)" placeholder="120" onChangeText={v => setTemperatureMax(v.replace(",", "."))} value={temperatureMax.toString()} />
-        <ModalConfigurationOption icon=         "oil-can" text= "Min pressure (bars)" placeholder=  "2" onChangeText={v => setPressureMin(v.replace(",", "."))}    value={pressureMin.toString()}    />
+        <ModalConfigurationOption keyboardType="default" icon=       "microchip" text="Peripheral ID"        placeholder="ED:BF:70:51:36:C7" onChangeText={v => setPeripheralId(v)} value={peripheralId} />
+        <ModalConfigurationOption keyboardType="numeric" icon="thermometer-half" text="Max temperature (°C)" placeholder="120"               onChangeText={v => setTemperatureMax(v.replace(",", "."))} value={temperatureMax.toString()} />
+        <ModalConfigurationOption keyboardType="numeric" icon=         "oil-can" text= "Min pressure (bars)" placeholder="2"                 onChangeText={v => setPressureMin(v.replace(",", "."))}    value={pressureMin.toString()}    />
       </View>
     </Modal>
   )
