@@ -16,6 +16,7 @@ import permission                             from "./lib/permission"
 export default function Index(){
   const [                 temperature, setTemperature]               = useState(0)
   const [                    pressure, setPressure]                  = useState(0)
+  const [                     counter, setCounter]                   = useState(0)
   const [ isModalConfigurationVisible, setModalConfigurationVisible] = useState(false)
   const [         isPermissionProblem, setPermissionProblem]         = useState(false)
   const [                isBleProblem, setBleProblem]                = useState(false)
@@ -72,7 +73,6 @@ export default function Index(){
   *
   */
   const onAdvertising = (Device)=>{
-    console.log(Device.name)
     setTemperature(
       bleData.extractTemperature(Device, "00001809-0000-1000-8000-00805f9b34fb")
     )
@@ -86,6 +86,12 @@ export default function Index(){
    */
   useEffect(()=>{
     loadConfiguration()
+
+    setInterval(()=>{
+      const now = new Date().getTime()
+      const diff = now - ble.getLastReception()
+      setCounter(Math.round(diff/1000))
+    }, 1000)
   }, [])
 
   return(
@@ -96,7 +102,7 @@ export default function Index(){
       <View style={[s.box, s.second, pressure <= pressureMin ? s.alert : undefined]}>
         <TextData icon="oil-can" value={pressure} unit="bars" />
       </View>
-      <Footer onButtonOptionPress={()=>setModalConfigurationVisible(true)} />
+      <Footer counter={counter} onButtonOptionPress={()=>setModalConfigurationVisible(true)} />
       <ModalConfiguration isVisible={isModalConfigurationVisible} onClose={onModalConfigurationClose} />
       <Bluescreen isPermissionProblem={isPermissionProblem} isBleProblem={isBleProblem} />
     </View>
