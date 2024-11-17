@@ -2,7 +2,11 @@ import {View, StyleSheet, Text} from "react-native"
 import FontAwesome              from "@react-native-vector-icons/fontawesome5"
 import global                   from "../global"
 
-export default ({icon, value, unit})=>{
+export default ({
+  icon,
+  value,
+  unit,
+}) => {
   return (
     <View style={s.container}>
       <FontAwesome name={icon} iconStyle="solid" style={s.icon} />
@@ -13,9 +17,7 @@ export default ({icon, value, unit})=>{
 
 const s = StyleSheet.create({
   container: {
-    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
   },
   icon: {
     color: global.colorText,

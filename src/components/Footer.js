@@ -2,9 +2,13 @@ import {View, StyleSheet, Pressable, Text} from "react-native"
 import FontAwesome                         from "@react-native-vector-icons/fontawesome5"
 import global                              from "../global"
 
-export default ({counter, onButtonOptionPress})=>{
+export default ({
+  style,
+  counter,
+  onButtonOptionPress,
+}) => {
   return (
-    <View style={s.container}>
+    <View style={[s.container, style]}>
       <View style={s.colText}>
         <Text style={s.text}>{counter}</Text>
       </View>
@@ -19,9 +23,7 @@ export default ({counter, onButtonOptionPress})=>{
 
 const s = StyleSheet.create({
   container: {
-    width: "100%",
     flexDirection: "row",
-    height: 30,
   },
   colText: {
     flex: 1,

@@ -2,9 +2,12 @@
  * Generic lib to read GAP data
  */
 import {BleManager, State} from "react-native-ble-plx"
+import {Subject}           from "rxjs"
+import bleData             from "./bleData"
 
-let manager       = null
-let lastReception = 0
+let   manager          = null
+let   lastReception    = 0
+const boschDataSubject = new Subject()
 
 /**
  *
@@ -27,7 +30,7 @@ const getLastReception = ()=>{
 /**
  *
  */
-const startDeviceScan = (Manager, Name, PeripheralId, OnAdvertising, OnError)=>{
+const startDeviceScan = (Manager, Name, PeripheralId, OnError)=>{
   Manager.startDeviceScan(null, null, (error, device)=>{
     if (error){
       OnError()
@@ -36,16 +39,16 @@ const startDeviceScan = (Manager, Name, PeripheralId, OnAdvertising, OnError)=>{
     }
     if (device.localName != Name) return
     if ((PeripheralId != "") && (device.id != PeripheralId)) return
-    OnAdvertising(device)
+    onBoschAdvertising(device)
     lastReception = new Date().getTime()
   })
 }
 
 /**
- * scan("MX5", "", ()={}, ()={})
- * scan("MX5", "ED:BF:70:51:36:C7", ()={}, ()={})
+ * gapScan("MX5", "", ()={})
+ * gapScan("MX5", "ED:BF:70:51:36:C7", ()={})
  */
-const scan = async function(Name, PeripheralId, OnAdvertising, OnError){
+const gapScan = async function(Name, PeripheralId, OnError){
   const state = await getManager().state()
   if (state != State.PoweredOn){
     console.error(`Start BLE manager... KO (State: ${state})`)
@@ -57,14 +60,25 @@ const scan = async function(Name, PeripheralId, OnAdvertising, OnError){
   manager.stopDeviceScan()
     .then(()=>{
       lastReception = new Date().getTime()
-      startDeviceScan(manager, Name, PeripheralId, OnAdvertising, OnError)
+      startDeviceScan(manager, Name, PeripheralId, OnError)
     })
     .catch(()=>{
       console.error("stopDeviceScan... KO")
     })
 }
 
+/**
+*
+*/
+const onBoschAdvertising = (Device)=>{
+  boschDataSubject.next({
+    temperature: bleData.extractTemperature(Device, "00001809-0000-1000-8000-00805f9b34fb"),
+    pressure: bleData.extractPressure(Device, "00002a6d-0000-1000-8000-00805f9b34fb"),
+  })
+}
+
 export default {
-  scan,
+  gapScan,
   getLastReception,
+  boschDataSubject,
 }

@@ -1,5 +1,5 @@
 import {useState}    from "react"
-import configuration from "../lib/configuration"
+import configuration from "./lib/configuration"
 
 const DEFAULT = {
     "peripheralId": "",

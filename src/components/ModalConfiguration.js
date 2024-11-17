@@ -2,8 +2,8 @@ import {View, StyleSheet, Text, Modal, Pressable} from "react-native"
 import {useState}                                 from "react"
 import FontAwesome                                from "@react-native-vector-icons/fontawesome5"
 import global                                     from "../global"
-import ModalConfigurationOption                   from "../components/ModalConfigurationOption"
-import configuration                              from "../app/configuration"
+import configuration                              from "../configuration"
+import ModalConfigurationOption                   from "./ModalConfigurationOption"
 
 export default ({isVisible, onClose})=>{
   const [peripheralId, setPeripheralId]     = useState("")
