@@ -5,6 +5,7 @@ export default {
   colorLowLight  : "#505050",
   colorModal     : "#25292E",
   colorOil       : "#F8DD7A",
+  colorSeparator : "#202020",
   sizeInput      : 40,
   sizeTitle      : 20,
   sizeIcon       : 18,

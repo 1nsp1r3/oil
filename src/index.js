@@ -2,18 +2,21 @@ import {StyleSheet, View, PermissionsAndroid} from "react-native"
 import {useState, useEffect}                  from "react"
 
 import configuration                          from "./configuration"
-import ScreenB                                from "./components/ScreenB"
+import Screen                                 from "./components/screen/Screen"
 import Footer                                 from "./components/Footer"
 import ModalConfiguration                     from "./components/ModalConfiguration"
 import Bluescreen                             from "./components/Bluescreen"
 import ble                                    from "./lib/ble"
 import permission                             from "./lib/permission"
+import sensorBosch                            from "./sensor/bosch"
+import sensorTpms                             from "./sensor/tpms"
+import f                                      from "./lib/format"
 
 /**
  * MAIN
  */
 export default function Index(){
-  const [                     counter, setCounter]                   = useState(0)
+  const [           counter, setCounter]                             = useState(0)
   const [ isModalConfigurationVisible, setModalConfigurationVisible] = useState(false)
   const [         isPermissionProblem, setPermissionProblem]         = useState(false)
   const [                isBleProblem, setBleProblem]                = useState(false)
@@ -25,8 +28,8 @@ export default function Index(){
   /**
    *
    */
-  const runScan = async (PeripheralId)=>{
-    console.log(`runScan(${PeripheralId})`)
+  const runScan = async (Options)=>{
+    console.log(`runScan()`)
     const granted = await permission.request([
       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
       PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
@@ -38,11 +41,34 @@ export default function Index(){
       return
     }
 
+    const bleConfig = [
+      {
+        id: Options.boschId,
+        onAdvertising: sensorBosch.onAdvertising,
+      },
+      {
+        id: Options.flId,
+        onAdvertising: sensorTpms.onAdvertisingFl,
+      },
+      {
+        id: Options.frId,
+        onAdvertising: sensorTpms.onAdvertisingFr,
+      },
+      {
+        id: Options.rlId,
+        onAdvertising: sensorTpms.onAdvertisingRl,
+      },
+      {
+        id: Options.rrId,
+        onAdvertising: sensorTpms.onAdvertisingRr,
+      },
+    ]
+
     /**
      * When GAP scan starting
      * ble.boschDataSubject is feed with GAP data
      */
-    ble.gapScan("MX5", PeripheralId, ()=>{
+    ble.gapScan(bleConfig, ()=>{
       setBleProblem(true)
     })
   }
@@ -57,8 +83,7 @@ export default function Index(){
         setTemperatureMax(Options.temperatureMax)
         setPressureMin(Options.pressureMin)
 
-        //Then start BLE
-        runScan(Options.peripheralId)
+        runScan(Options) //start BLE
       })
   }
 
@@ -77,18 +102,24 @@ export default function Index(){
     loadConfiguration()
 
     setInterval(()=>{
-      const now = new Date().getTime()
-      const diff = now - ble.getLastReception()
-      setCounter(Math.round(diff/1000))
+      setCounter(f.numberOfSecondsSince(sensorBosch.getLastReception()))
     }, 1000)
   }, [])
 
   return(
     <View style={s.container}>
-      <ScreenB style={s.screen} temperatureMax={temperatureMax} pressureMin={pressureMin} dataStream={ble.boschDataSubject} />
-      <Footer  style={s.footer} counter={counter} onButtonOptionPress={()=>setModalConfigurationVisible(true)} />
-      <ModalConfiguration                  isVisible={isModalConfigurationVisible} onClose={onModalConfigurationClose} />
-      <Bluescreen                          isPermissionProblem={isPermissionProblem} isBleProblem={isBleProblem} />
+      <Screen style={s.screen}
+        temperatureMax={temperatureMax}
+        pressureMin={pressureMin}
+        boschDataStream={sensorBosch.data}
+        flDataStream={sensorTpms.dataFl}
+        frDataStream={sensorTpms.dataFr}
+        rlDataStream={sensorTpms.dataRl}
+        rrDataStream={sensorTpms.dataRr}
+      />
+      <Footer style={s.footer} counter={counter} onButtonOptionPress={()=>setModalConfigurationVisible(true)} />
+      <ModalConfiguration isVisible={isModalConfigurationVisible} onClose={onModalConfigurationClose} />
+      <Bluescreen isPermissionProblem={isPermissionProblem} isBleProblem={isBleProblem} />
     </View>
   )
 }

@@ -2,9 +2,13 @@ import {useState}    from "react"
 import configuration from "./lib/configuration"
 
 const DEFAULT = {
-    "peripheralId": "",
-  "temperatureMax": "120",
-     "pressureMin": "2",
+         boschId: "",
+            flId: "",
+            frId: "",
+            rlId: "",
+            rrId: "",
+  temperatureMax: "120",
+     pressureMin: "2",
 }
 
 /**
@@ -13,7 +17,11 @@ const DEFAULT = {
 const load = async()=>{
   const options = await configuration.load(DEFAULT)
 
-  options.peripheralId     = options.peripheralId
+  options.boschId        = options.boschId
+  options.flId           = options.flId
+  options.frId           = options.frId
+  options.rlId           = options.rlId
+  options.rrId           = options.rrId
   options.temperatureMax = Number(options.temperatureMax)
   options.pressureMin    = Number(options.pressureMin)
 

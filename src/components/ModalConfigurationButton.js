@@ -1,18 +1,18 @@
-import {View, StyleSheet, Text, TextInput} from "react-native"
-import FontAwesome                         from "@react-native-vector-icons/fontawesome5"
-import global                              from "../global"
+import {View, StyleSheet, Text, Button} from "react-native"
+import FontAwesome                      from "@react-native-vector-icons/fontawesome5"
+import global                           from "../global"
 
-export default ({keyboardType, icon, text, placeholder, onChangeText, value})=>{
+export default ({icon, label, buttonLabel, onPress})=>{
   return (
     <View style={s.container}>
       <View style={s.colLabel}>
         <View style={s.labelContainer}>
           <FontAwesome name={icon} iconStyle="solid" style={s.icon} />
-          <Text style={s.label}>{text}</Text>
+          <Text style={s.label}>{label}</Text>
         </View>
       </View>
-      <View style={s.colInput}>
-        <TextInput keyboardType={keyboardType} style={s.textInput} placeholder={placeholder} onChangeText={onChangeText} value={value} />
+      <View style={s.colButton}>
+        <Button onPress={onPress} title={buttonLabel} />
       </View>
     </View>
   )
@@ -26,8 +26,9 @@ const s = StyleSheet.create({
     flex: 3,
     justifyContent: "center",
   },
-  colInput: {
+  colButton: {
     flex: 2,
+    padding: 2,
   },
   labelContainer: {
     flexDirection: "row",
@@ -43,13 +44,5 @@ const s = StyleSheet.create({
     color: global.colorText,
     fontSize: global.sizeText,
     marginLeft: global.sizeText,
-  },
-  textInput: {
-    borderWidth: 1,
-    color: global.colorText,
-    borderColor: global.colorLowLight,
-    margin: 1,
-    paddingLeft: global.sizeText,
-    height: global.sizeInput,
   },
 })

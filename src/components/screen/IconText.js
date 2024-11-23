@@ -1,16 +1,16 @@
 import {StyleSheet, View, Image, Text} from "react-native"
+import global                          from "../../global"
 
 export default ({
-  color,
   value,
   legend,
   image,
 }) => (
   <View style={s.container}>
-    <Image style={s.icon} source={image} tintColor={color} />
+    <Image style={s.icon} source={image} />
     <View style={s.text}>
-      <Text style={[s.value, {color: color}]}>{value}</Text>
-      <Text style={[s.legend, {color: color}]}>{legend}</Text>
+      <Text style={s.value}>{value}</Text>
+      <Text style={s.legend}>{legend}</Text>
     </View>
   </View>
 )
@@ -26,13 +26,16 @@ const s = StyleSheet.create({
   icon: {
     width: 100,
     height: 100,
+    tintColor: global.colorOil,
   },
   value: {
     fontSize: 80,
+    color: global.colorOil,
   },
   legend: {
     marginLeft: 5,
     fontSize: 40,
+    color: global.colorOil,
     fontStyle: "italic",
   },
 })
