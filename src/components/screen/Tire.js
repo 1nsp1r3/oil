@@ -10,17 +10,20 @@ export default ({
    *
    */
   const getValue = () => {
+    const seconds = f.numberOfSecondsSince(data["lastReception"])
     switch(property){
-      case "pressure"      : return f.toOneDecimal(data[property])
-      case "temperature"   : return `${data[property]}°C`
-      case "batteryPercent": return `${data[property]}`
-      case "lastReception" : return `${f.numberOfSecondsSince(data[property])}s`
+      case "pressure"      : return data[property]
+      case "temperature"   : return data[property]
+      case "batteryPercent": return data[property]
+      case "lastReception" : return seconds > 60 ? "∞s" : `${seconds}s`
     }
   }
 
+  const isDelayed = () => f.numberOfSecondsSince(data["lastReception"]) > 60
+
   return (
     <ImageBackground style={s.tireIcon} source={require("../../../assets/iso7000-1435-tyre-pressure.png")}>
-      <Text style={s.text}>{getValue()}</Text>
+      <Text style={[s.text, isDelayed() ? s.through : undefined]}>{getValue()}</Text>
     </ImageBackground>
   )
 }
@@ -35,5 +38,9 @@ const s = StyleSheet.create({
   text:{
     color: global.colorText,
     fontSize: 20,
+  },
+  through:{
+    textDecorationLine: "line-through",
+    color: global.colorAlert,
   },
 })

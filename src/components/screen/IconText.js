@@ -4,13 +4,14 @@ import global                          from "../../global"
 export default ({
   value,
   legend,
+  isDelayed,
   image,
 }) => (
   <View style={s.container}>
     <Image style={s.icon} source={image} />
     <View style={s.text}>
-      <Text style={s.value}>{value}</Text>
-      <Text style={s.legend}>{legend}</Text>
+      <Text style={[s.value, isDelayed ? s.through : undefined]}>{value}</Text>
+      {(value.length > 0) && <Text style={s.legend}>{legend}</Text>}
     </View>
   </View>
 )
@@ -37,5 +38,9 @@ const s = StyleSheet.create({
     fontSize: 40,
     color: global.colorOil,
     fontStyle: "italic",
+  },
+  through:{
+    textDecorationLine: "line-through",
+    color: global.colorAlert,
   },
 })

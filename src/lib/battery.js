@@ -15,14 +15,14 @@ const table = [
 ]
 
 const getPercent = (Voltage) => {
-  if (Voltage >= table[0].voltage) return "100%" //>= 3.0V
-  if (Voltage <= table[table.length-1].voltage) return "0%" //<= 2.0V
+  if (Voltage >= table[0].voltage) return 100 //>= 3.0V
+  if (Voltage <= table[table.length-1].voltage) return 0 //<= 2.0V
 
   for (let i=0;i<table.length-1;i++){
     const upper = table[i]
     const lower = table[i+1]
-    if (Voltage == upper.voltage) return `${upper.percentage}%`
-    if (Voltage == lower.voltage) return `${lower.percentage}%`
+    if (Voltage == upper.voltage) return upper.percentage
+    if (Voltage == lower.voltage) return lower.percentage
 
     if (Voltage > lower.voltage){
       //Voltage
@@ -33,11 +33,11 @@ const getPercent = (Voltage) => {
       //Percent
       const gapP = upper.percentage - lower.percentage //10
       const result = Math.round(gapP * ratioV * 100)/100 //10 x 0.4 -> 4%
-      return `${lower.percentage+result}%` //70% + 4% -> 74%
+      return lower.percentage+result //70 + 4 -> 74
     }
   }
 
-  return ""
+  return 0
 }
 
 export default {

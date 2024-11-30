@@ -1,5 +1,6 @@
-import bleData   from "../../lib/bleData"
-import battery   from "../../lib/battery"
+import bleData from "../../lib/bleData"
+import battery from "../../lib/battery"
+import f       from "../../lib/format"
 
 /**
  *
@@ -16,9 +17,9 @@ const decode = function(Device){
   ) / 100             //0x0105 -> 261 kpa -> 2.61 bars
 
   return {
-    pressure,
-    temperature,
-    batteryPercent: battery.getPercent(batteryVoltage),
+    pressure: f.toOneDecimal(pressure),
+    temperature: `${temperature}°C`,
+    batteryPercent: `${battery.getPercent(batteryVoltage)}%`,
     lastReception: new Date().getTime(),
   }
 }

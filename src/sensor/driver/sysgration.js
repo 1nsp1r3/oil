@@ -1,4 +1,5 @@
-import bleData   from "../../lib/bleData"
+import bleData from "../../lib/bleData"
+import f       from "../../lib/format"
 
 /**
  *
@@ -18,8 +19,8 @@ const decode = function(Device){
   ) / 100               //06C0 -> 1728 -> 17.28 °C
 
   return {
-    pressure: kpa / 100, //28.131 kpa -> 0.28 bars,
-    temperature: Math.round(temperature),
+    pressure: f.toOneDecimal(kpa / 100), //28.131 kpa -> 0.28 -> 0.3 bars,
+    temperature: `${Math.round(temperature)}°C`,
     batteryPercent: `${data[16]}%`,
     lastReception: new Date().getTime(),
   }

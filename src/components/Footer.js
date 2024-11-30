@@ -7,12 +7,16 @@ export default ({
   counter,
   onButtonOptionPress,
 }) => {
+  const isDelayed = () => counter > 60
+  const getCounter = () => isDelayed() ? "∞s" : `${counter}s`
+
   return (
     <View style={[s.container, style]}>
-      <View style={s.colText}>
-        <Text style={s.text}>{counter}</Text>
+      <View style={s.col}></View>
+      <View style={[s.col, s.colText]}>
+        <Text style={[s.text, isDelayed() ? s.through : undefined]}>{getCounter()}</Text>
       </View>
-      <View style={s.colIcon}>
+      <View style={[s.col, s.colIcon]}>
         <Pressable onPress={onButtonOptionPress}>
           <FontAwesome name="cog" iconStyle="solid" style={s.icon} />
         </Pressable>
@@ -25,24 +29,27 @@ const s = StyleSheet.create({
   container: {
     flexDirection: "row",
   },
-  colText: {
+  col: {
     flex: 1,
     justifyContent: "center",
     backgroundColor: global.colorBackground,
     paddingHorizontal: global.sizeIcon,
+  },
+  colText: {
+    alignItems: "center",
+  },
+  colIcon: {
+    alignItems: "flex-end",
   },
   text: {
     color: global.colorLowLight,
   },
-  colIcon: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "flex-end",
-    backgroundColor: global.colorBackground,
-    paddingHorizontal: global.sizeIcon,
-  },
   icon: {
     color: global.colorText,
     fontSize: global.sizeIcon,
+  },
+  through:{
+    textDecorationLine: "line-through",
+    color: global.colorAlert,
   },
 })

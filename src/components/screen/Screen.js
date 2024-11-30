@@ -14,11 +14,11 @@ export default ({
   rlDataStream,
   rrDataStream,
 }) => {
-  //Tires
-  const [fl, setFl] = useState({pressure: 0, temperature: 0, batteryPercent: "0%", lastReception: new Date().getTime()})
-  const [fr, setFr] = useState({pressure: 0, temperature: 0, batteryPercent: "0%", lastReception: new Date().getTime()})
-  const [rl, setRl] = useState({pressure: 0, temperature: 0, batteryPercent: "0%", lastReception: new Date().getTime()})
-  const [rr, setRr] = useState({pressure: 0, temperature: 0, batteryPercent: "0%", lastReception: new Date().getTime()})
+  const                     [fl, setFl] = useState({pressure: "", temperature: "", batteryPercent: "", lastReception: new Date().getTime()})
+  const                     [fr, setFr] = useState({pressure: "", temperature: "", batteryPercent: "", lastReception: new Date().getTime()})
+  const                     [rl, setRl] = useState({pressure: "", temperature: "", batteryPercent: "", lastReception: new Date().getTime()})
+  const                     [rr, setRr] = useState({pressure: "", temperature: "", batteryPercent: "", lastReception: new Date().getTime()})
+  const               [bosch, setBosch] = useState({pressure: "", temperature: "", lastReception: new Date().getTime()})
   const [tiresDisplay, setTiresDisplay] = useState(0)
 
   /**
@@ -44,6 +44,7 @@ export default ({
     if (frDataStream) frDataStream.subscribe(Data => setFr(Data))
     if (rlDataStream) rlDataStream.subscribe(Data => setRl(Data))
     if (rrDataStream) rrDataStream.subscribe(Data => setRr(Data))
+    if (boschDataStream) boschDataStream.subscribe(Data => setBosch(Data))
   }, [])
 
   return (
@@ -64,7 +65,7 @@ export default ({
 
       {/* PRESSURE GAUGES */}
       <View style={s.middle}>
-         <PressureGauges style={s.pressureGauges} temperatureMax={temperatureMax} pressureMin={pressureMin} dataStream={boschDataStream} />
+         <PressureGauges style={s.pressureGauges} temperatureMax={temperatureMax} pressureMin={pressureMin} data={bosch} />
       </View>
 
       {/* RIGHT COLUMN */}

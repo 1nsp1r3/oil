@@ -1,5 +1,6 @@
 import {Subject} from "rxjs"
 import bleData   from "../lib/bleData"
+import f         from "../lib/format"
 
 const data          = new Subject()
 let   lastReception = new Date().getTime()
@@ -36,7 +37,8 @@ const onAdvertising = (Device) => {
 
   data.next({
     temperature: extractTemperature(Device),
-    pressure: extractPressure(Device),
+    pressure: f.toOneDecimal(extractPressure(Device)),
+    lastReception: new Date().getTime(),
   })
 }
 
