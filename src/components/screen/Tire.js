@@ -10,16 +10,15 @@ export default ({
    *
    */
   const getValue = () => {
-    const seconds = f.numberOfSecondsSince(data["lastReception"])
     switch(property){
       case "pressure"      : return data[property]
       case "temperature"   : return data[property]
       case "batteryPercent": return data[property]
-      case "lastReception" : return seconds > 60 ? "∞s" : `${seconds}s`
+      case "lastReception" : return f.getHHMM(data["lastReception"])
     }
   }
 
-  const isDelayed = () => f.numberOfSecondsSince(data["lastReception"]) > 60
+  const isDelayed = () => f.numberOfSecondsSince(data["lastReception"]) > 300 //5 minutes
 
   return (
     <ImageBackground style={s.tireIcon} source={require("../../../assets/iso7000-1435-tyre-pressure.png")}>
