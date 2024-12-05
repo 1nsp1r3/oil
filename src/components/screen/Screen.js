@@ -14,10 +14,10 @@ export default ({
   rlDataStream,
   rrDataStream,
 }) => {
-  const                     [fl, setFl] = useState({pressure: "", temperature: "", batteryPercent: "", lastReception: new Date().getTime()})
-  const                     [fr, setFr] = useState({pressure: "", temperature: "", batteryPercent: "", lastReception: new Date().getTime()})
-  const                     [rl, setRl] = useState({pressure: "", temperature: "", batteryPercent: "", lastReception: new Date().getTime()})
-  const                     [rr, setRr] = useState({pressure: "", temperature: "", batteryPercent: "", lastReception: new Date().getTime()})
+  const                     [fl, setFl] = useState({pressure: "", temperature: "", batteryPercent: "", lastReception: 1205362800000}) //1205362800000 = 00:00
+  const                     [fr, setFr] = useState({pressure: "", temperature: "", batteryPercent: "", lastReception: 1205362800000})
+  const                     [rl, setRl] = useState({pressure: "", temperature: "", batteryPercent: "", lastReception: 1205362800000})
+  const                     [rr, setRr] = useState({pressure: "", temperature: "", batteryPercent: "", lastReception: 1205362800000})
   const               [bosch, setBosch] = useState({pressure: "", temperature: "", lastReception: new Date().getTime()})
   const [tiresDisplay, setTiresDisplay] = useState(0)
 

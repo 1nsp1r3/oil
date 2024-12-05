@@ -33,3 +33,11 @@ it("4 should return 4.0", () => {
   const ret = f.toOneDecimal(4)
   expect(ret.toString()).toBe("4.0")
 })
+
+/**
+ *
+ */
+it("getHHMM() should return 08:02", () => {
+  const ret = f.getHHMM(173343756005)
+  expect(ret).toBe("08:02")
+})

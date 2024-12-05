@@ -1,8 +1,8 @@
-import {StyleSheet, View}    from "react-native"
-import {useState, useEffect} from "react"
-import global                from "../../global"
-import f                     from "../../lib/format"
-import IconText              from "./IconText"
+import {StyleSheet, View} from "react-native"
+import {useState}         from "react"
+import global             from "../../global"
+import f                  from "../../lib/format"
+import IconText           from "./IconText"
 
 export default ({
   style,
